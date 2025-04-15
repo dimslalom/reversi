@@ -1,0 +1,254 @@
+Welcome to Reversi!
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|++++++++|
+D|+++OX+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: C5,D6,E3,F4
+Please enter move (Or H for help): H
+
+[A-H][1-8]: Place piece at specified square.
+H/h: Display help message.
+Q/q: Quit current game.
+
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|++++++++|
+D|+++OX+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: C5,D6,E3,F4
+Please enter move (Or H for help): h
+
+[A-H][1-8]: Place piece at specified square.
+H/h: Display help message.
+Q/q: Quit current game.
+
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|++++++++|
+D|+++OX+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: C5,D6,E3,F4
+Please enter move (Or H for help): C5
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|++++O+++|
+D|+++OO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 2 to move
+Possible moves: C4,C6,E6
+Please enter move (Or H for help): c4
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|+++XO+++|
+D|+++XO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: B3,C3,D3,E3,F3
+Please enter move (Or H for help): B3
+  12345678
+  --------
+A|++++++++|
+B|++O+++++|
+C|+++OO+++|
+D|+++XO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 2 to move
+Possible moves: B4,B6,C6,D6,E6,F6
+Please enter move (Or H for help): B4
+  12345678
+  --------
+A|++++++++|
+B|++OX++++|
+C|+++XO+++|
+D|+++XO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: A3,B5,C3,D3,E3,F3
+Please enter move (Or H for help): a3
+  12345678
+  --------
+A|++O+++++|
+B|++OO++++|
+C|+++XO+++|
+D|+++XO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 2 to move
+Possible moves: A2,A4,B6,C6,D6,E6,F6
+Please enter move (Or H for help): A4
+  12345678
+  --------
+A|++OX++++|
+B|++OX++++|
+C|+++XO+++|
+D|+++XO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: A5,B5,C3,D3,E3,F3
+Please enter move (Or H for help): C3
+  12345678
+  --------
+A|++OX++++|
+B|++OX++++|
+C|++OOO+++|
+D|+++OO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 2 to move
+Possible moves: A2,B2,C2,C6,D2,D6,E6
+Please enter move (Or H for help): H
+
+[A-H][1-8]: Place piece at specified square.
+H/h: Display help message.
+Q/q: Quit current game.
+
+  12345678
+  --------
+A|++OX++++|
+B|++OX++++|
+C|++OOO+++|
+D|+++OO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 2 to move
+Possible moves: A2,B2,C2,C6,D2,D6,E6
+Please enter move (Or H for help): D3
+Please enter move (Or H for help): h
+
+[A-H][1-8]: Place piece at specified square.
+H/h: Display help message.
+Q/q: Quit current game.
+
+  12345678
+  --------
+A|++OX++++|
+B|++OX++++|
+C|++OOO+++|
+D|+++OO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 2 to move
+Possible moves: A2,B2,C2,C6,D2,D6,E6
+Please enter move (Or H for help): q
+Player 1 Wins!
+Would you like to play again? (y/n): y
+Welcome to Reversi!
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|++++++++|
+D|+++OX+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: C5,D6,E3,F4
+Please enter move (Or H for help): q
+It's a draw! Now that is impressive.
+Would you like to play again? (y/n): Y
+Welcome to Reversi!
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|++++++++|
+D|+++OX+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: C5,D6,E3,F4
+Please enter move (Or H for help): C5
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|++++O+++|
+D|+++OO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 2 to move
+Possible moves: C4,C6,E6
+Please enter move (Or H for help): C4
+  12345678
+  --------
+A|++++++++|
+B|++++++++|
+C|+++XO+++|
+D|+++XO+++|
+E|+++XO+++|
+F|++++++++|
+G|++++++++|
+H|++++++++|
+  --------
+Player 1 to move
+Possible moves: B3,C3,D3,E3,F3
+Please enter move (Or H for help): Q
+It's a draw! Now that is impressive.
+Would you like to play again? (y/n): N
