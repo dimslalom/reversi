@@ -1,2 +1,2 @@
 # reversi
-# le poisson steve
+## le poisson steve
