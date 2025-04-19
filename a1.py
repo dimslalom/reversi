@@ -32,8 +32,8 @@ def move_to_index(move: str) -> tuple[int, int]:
         'G': 6,
         'H': 7
     }
-    column = letter_to_index[move[0].upper()]
-    row = int(move[1]) - 1
+    row = letter_to_index[move[0].upper()]
+    column = int(move[1]) - 1
 
     return (row, column)
 # Task 3
@@ -125,16 +125,20 @@ def display_board(board: list[list[str]]) -> None:
     """
     Displays the board in a readable format.
     """
+    top_bar = ""
+    border = ""
     alphabet = "ABCDEFGH"
-    print("  12345678")
-    print("  --------")
+    for i in range(len(board[0])):
+        top_bar += str(i + 1)
+        border += "-" 
+    print(f"  {top_bar}\n  {border}")
     for i, row in enumerate(board):
         level = f"{alphabet[i]}|"
         for piece in row:
             level += piece
         level += "|"
         print(level)
-    print("  --------")
+    print(f"  {border}")
 # Task 8
 def get_valid_command(valid_moves: list[str]) -> str:
     """
@@ -143,10 +147,12 @@ def get_valid_command(valid_moves: list[str]) -> str:
     A move should not be returned if it is not in this list (the Q and H commands are not moves).
     """
     input_command = ""
+    valid_moves.extend(["Q", "H"])
     while input_command not in valid_moves:
         input_command = input("Please enter move (Or H for help): ")
-        if input_command in valid_moves:
-            return input_command
+        if input_command.upper() in valid_moves:
+            print(input_command)
+            return input_command.upper()
 # Task 9
 def get_reversed_positions(board: list[list[str]], piece: str, position: tuple[int, int]) -> list[tuple[int, int]]:
     """
@@ -157,60 +163,141 @@ def get_reversed_positions(board: list[list[str]], piece: str, position: tuple[i
     for row_index, column in enumerate(board):
         for column_index, cell in enumerate(column):
             if cell == piece:
-                print(f"Checking cell {chr(column_index + 65)}{row_index + 1} for reversals")
                 reversed_positions.extend(get_intermediate_locations(position, (row_index, column_index)))
 
     return reversed_positions
-def check_valid_cell(board: list[list[str]],player: str, position: tuple[int, int]) -> bool:
-        player += "+"
-        row_index = position[0]
-        column_index = position[1]
-        if row_index != 0 and row_index != len(board) - 1 and column_index != 0 and column_index != len(board) - 1:
-            if (board[row_index + 1][column_index] not in player
-            or board[row_index + 1][column_index + 1] not in player
-            or board[row_index + 1][column_index - 1] not in player
-            or board[row_index - 1][column_index] not in player
-            or board[row_index - 1][column_index + 1] not in player
-            or board[row_index - 1][column_index - 1] not in player
-            or board[row_index][column_index + 1] not in player
-            or board[row_index][column_index - 1] not in player):
-                return True
-        elif row_index == 0 and column_index == 0:
-            if (board[row_index + 1][column_index] not in player
-            or board[row_index + 1][column_index + 1] not in player
-            or board[row_index][column_index + 1] not in player):
-                return True
-        elif row_index == 0 and column_index == len(board) - 1:
-            if (board[row_index + 1][column_index] not in player
-            or board[row_index + 1][column_index - 1] not in player
-            or board[row_index][column_index - 1] not in player):
-                return True
-        elif row_index == len(board) - 1 and column_index == 0:
-            if (board[row_index - 1][column_index] not in player
-            or board[row_index - 1][column_index + 1] not in player
-            or board[row_index][column_index + 1] not in player):
-                return True
-        else:
-            return False
+def check_valid_cell(board: list[list[str]], player: str, row_index: int, column_index: int) -> bool:
+    """
+    Checks if board[row_index][column_index] is empty and has an adjacent opponent piece.
+    """
+    board_height = len(board)
+    if board_height == 0:
+        return False
+    board_width = len(board[0])
+
+    # Check if target indices are within board boundaries
+    if not (0 <= row_index < board_height and 0 <= column_index < board_width):
+        return False
+
+    # Check if the target cell is empty
+    if board[row_index][column_index] != "+":
+        return False
+    
+
+    # Determine opponent
+    if player == 'X':
+        opponent = 'O'
+    elif player == 'O':
+        opponent = 'X'
+    else:
+        return False # Invalid player input
+
+    # Check 8 neighbors for an opponent's piece
+    for dr in [-1, 0, 1]:
+        for dc in [-1, 0, 1]:
+            if dr == 0 and dc == 0:
+                continue # Skip the current cell
+
+            neighbor_r, neighbor_c = row_index + dr, column_index + dc
+
+            # Check if neighbor coordinates are within bounds
+            if 0 <= neighbor_r < board_height and 0 <= neighbor_c < board_width:
+                # Check if this valid neighbor contains the opponent's piece
+                if board[neighbor_r][neighbor_c] == opponent:
+                    return True # Valid move: empty cell with adjacent opponent
+
+    # If loop finishes, no adjacent opponent was found
+    return False
+def get_placed_pieces(board: list[list[str]]) -> list[tuple[int, int]]:
+    """
+    Returns a list of all the pieces that have been placed on the board.
+    """
+    placed_pieces = []
+    for row_index, row in enumerate(board):
+        for column_index, cell in enumerate(row):
+            if cell != "+":
+                placed_pieces.append((row_index, column_index))
+    return placed_pieces
 # Task 10
 def get_available_moves(board: list[list[str]], player: str) -> list[str]:
     """
     Returns the list of available valid moves that the given player can make in the given game state.
     """
     available_moves = []
+    placed_pieces = get_placed_pieces(board)
 
     for row_index, row in enumerate(board):
         for column_index, cell in enumerate(row):
-            if (cell == "+" and check_valid_cell(board, player, (row_index, column_index))):
+            # print(cell)
+            # print(f"{chr(row_index + 65)}{column_index + 1}")
+            # print(check_valid_cell(board, player, row_index, column_index))
+            if (cell == "+" and check_valid_cell(board, player, row_index, column_index)):
                 position = (row_index, column_index)
-                print(f"{chr(column_index + 65)}{row_index + 1}")
                 reversed_positions = get_reversed_positions(board, player, position)
-                if reversed_positions:
-                    move = f"{chr(column_index + 65)}{row_index + 1}"
-                    print(f"Adding move: {move}")
+
+                # print("Reversed positions: ", reversed_positions)
+                # print("Placed pieces: ", placed_pieces)
+
+
+                # Check if all reversed positions are in placed_pieces
+                all_found = True
+                for element in reversed_positions:
+                    if element not in placed_pieces:
+                        all_found = False
+                        break
+
+                if reversed_positions and all_found:
+                    move = f"{chr(row_index + 65)}{column_index + 1}"
                     available_moves.append(move)
     return available_moves
+# Task 11
+def make_move(board: list[list[str]], piece: str, move: str) -> None:
+    """
+    Makes a move on the board by placing the specified piece at the specified position. 
+    The function should also reverse all pieces that are between the new piece and any other pieces of the same type.
 
+    Preconditions:
+    move is a valid move, given in upper case
+    move corresponds to a valid position on the board
+    each row of board will contain the same number of columns
+    """
+    row_index, column_index = move_to_index(move)
+    board[row_index][column_index] = piece
+    reversed_positions = get_reversed_positions(board, piece, (row_index, column_index))
+    for position in reversed_positions:
+        board[position[0]][position[1]] = piece
+# Task 12
+def play_game() -> None:
+    """
+    The main function of the game. 
+    It should display the initial board, and then repeatedly ask the user for a move until the game is over.
+    """
+    board = generate_initial_board()
+    print("Welcome to Reversi!")
+    player = "X"
+    display_board(board)
+    valid_moves = get_available_moves(board, player)
+    print("Player 1 to move")
+    print("Possible moves: " + ",".join(valid_moves))
+    while valid_moves:
+        move = get_valid_command(valid_moves)
+        print("You entered: " + move)
+        if move == "Q":
+            return
+        elif move == "H":
+            print("[A-H][1-8]: Place piece at specified square. \n H/h: Display help message. \n Q/q: Quit current game.")
+            continue
+        else:
+            make_move(board, player, move)
+        display_board(board)
+        if player == "O":
+            player = "X"
+            print("Player 1 to move")
+        else:
+            player = "O"
+            print("Player 2 to move")
+        valid_moves = get_available_moves(board, player)
+        print("Possible moves: " + ",".join(valid_moves))
 
 
 def main() -> None:
@@ -225,15 +312,21 @@ def main() -> None:
     # print(get_intermediate_locations((0,0), (0,3)))
     # print(display_board(generate_initial_board()))
     # get_valid_command(["A1","B4"])
-    # board = [["+","+","+","+","+"], ["+","O","O","O","+"], ["+","X","+","X","+"] ,["+","X","X","X","+"], ["+","+","+","+","+"]]
+    # board = generate_initial_board()
     # display_board(board)
     # print(get_reversed_positions(board, "O", (3,0)))
 
-    board = generate_initial_board()
-    display_board(board)
-    print(get_available_moves(board, "X"))
-    # print(get_intermediate_locations((3,4), (5,2)))
-    # print(get_reversed_positions(board, "X", (5,2)))
+    # board = [["+","+","+","+","+"], ["+","O","O","O","+"], ["+","X","+","X","+"] ,["+","X","X","X","+"], ["+","+","+","+","+"]]
+    # display_board(board)
+    # print(get_available_moves(board, "O"))
+
+    play_game()
+    # make_move(board, "X", "D3")
+    # display_board(board)
+
+    
+
+    
 
 
 
