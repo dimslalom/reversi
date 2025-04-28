@@ -159,12 +159,15 @@ def get_reversed_positions(board: list[list[str]], piece: str, position: tuple[i
     Returns every position that would be reversed if the specified piece were placed at the specified position.
     """
     reversed_positions = []
+    
 
-    for row_index, column in enumerate(board):
-        for column_index, cell in enumerate(column):
-            if cell == piece:
+    for row_index, column in enumerate(board): # Iterates through rows
+        for column_index, cell in enumerate(column): # Iterates through columns
+            print(f"Row: {row_index}, Column: {column_index}, Cell: {cell} 1. =={piece}? {cell==piece} 2. one of the placed piece?{(row_index,column_index) in get_placed_pieces(board)} 3. cell != +? {cell != '+'}")
+            if cell==piece and (row_index,column_index) in get_placed_pieces(board) and cell != "+":
+                # Calculate intermediate locations between the potential move 'position'
+                # and the found piece at '(row_index, column_index)'
                 reversed_positions.extend(get_intermediate_locations(position, (row_index, column_index)))
-
     return reversed_positions
 def check_valid_cell(board: list[list[str]], player: str, row_index: int, column_index: int) -> bool:
     """
@@ -224,7 +227,7 @@ def get_available_moves(board: list[list[str]], player: str) -> list[str]:
     Returns the list of available valid moves that the given player can make in the given game state.
     """
     available_moves = []
-    placed_pieces = get_placed_pieces(board)
+    # placed_pieces = get_placed_pieces(board)
 
     for row_index, row in enumerate(board):
         for column_index, cell in enumerate(row):
@@ -237,16 +240,14 @@ def get_available_moves(board: list[list[str]], player: str) -> list[str]:
 
                 # print("Reversed positions: ", reversed_positions)
                 # print("Placed pieces: ", placed_pieces)
-
-
                 # Check if all reversed positions are in placed_pieces
-                all_found = True
-                for element in reversed_positions:
-                    if element not in placed_pieces:
-                        all_found = False
-                        break
+                # all_found = True
+                # for element in reversed_positions:
+                #     if element not in placed_pieces:
+                #         all_found = False
+                #         break
 
-                if reversed_positions and all_found:
+                if reversed_positions:
                     move = f"{chr(row_index + 65)}{column_index + 1}"
                     available_moves.append(move)
     return available_moves
@@ -274,7 +275,7 @@ def play_game() -> None:
     """
     board = generate_initial_board()
     print("Welcome to Reversi!")
-    player = "X"
+    player = "O"
     display_board(board)
     valid_moves = get_available_moves(board, player)
     print("Player 1 to move")
@@ -290,11 +291,11 @@ def play_game() -> None:
         else:
             make_move(board, player, move)
         display_board(board)
-        if player == "O":
-            player = "X"
+        if player == "X":
+            player = "O"
             print("Player 1 to move")
         else:
-            player = "O"
+            player = "X"
             print("Player 2 to move")
         valid_moves = get_available_moves(board, player)
         print("Possible moves: " + ",".join(valid_moves))
