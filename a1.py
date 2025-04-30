@@ -30,7 +30,25 @@ def move_to_index(move: str) -> tuple[int, int]:
         'E': 4,
         'F': 5,
         'G': 6,
-        'H': 7
+        'H': 7,
+        'I': 8,
+        'J': 9,
+        'K': 10,
+        'L': 11,
+        'M': 12,
+        'N': 13,
+        'O': 14,
+        'P': 15,
+        'Q': 16,
+        'R': 17,
+        'S': 18,
+        'T': 19,
+        'U': 20,
+        'V': 21,
+        'W': 22,
+        'X': 23,
+        'Y': 24,
+        'Z': 25,
     }
     row = letter_to_index[move[0].upper()]
     column = int(move[1]) - 1
@@ -151,7 +169,6 @@ def get_valid_command(valid_moves: list[str]) -> str:
     while input_command not in valid_moves:
         input_command = input("Please enter move (Or H for help): ")
         if input_command.upper() in valid_moves:
-            print(input_command)
             return input_command.upper()
 # Task 9
 def get_reversed_positions(board: list[list[str]], piece: str, position: tuple[int, int]) -> list[tuple[int, int]]:
@@ -159,15 +176,34 @@ def get_reversed_positions(board: list[list[str]], piece: str, position: tuple[i
     Returns every position that would be reversed if the specified piece were placed at the specified position.
     """
     reversed_positions = []
+    # Determine opponent piece
+    if piece == 'X':    
+        opponent = 'O'
+    elif piece == 'O':
+        opponent = 'X'
     
+    # Store directions to check
+    directions = [
+        (-1, -1),   (-1, 0),    (-1, 1),
+        (0, -1),                (0, 1),
+        (1, 1),     (1, 0),     (1, -1)
+    ]
 
-    for row_index, column in enumerate(board): # Iterates through rows
-        for column_index, cell in enumerate(column): # Iterates through columns
-            print(f"Row: {row_index}, Column: {column_index}, Cell: {cell} 1. =={piece}? {cell==piece} 2. one of the placed piece?{(row_index,column_index) in get_placed_pieces(board)} 3. cell != +? {cell != '+'}")
-            if cell==piece and (row_index,column_index) in get_placed_pieces(board) and cell != "+":
-                # Calculate intermediate locations between the potential move 'position'
-                # and the found piece at '(row_index, column_index)'
-                reversed_positions.extend(get_intermediate_locations(position, (row_index, column_index)))
+    for dr, dc in directions:
+        row_index, column_index = (position[0] + dr), (position[1] + dc)
+        while 0 <= row_index < len(board) and 0 <= column_index < len(board[0]):
+            if board[row_index][column_index] == opponent:
+                # Found an opponent piece, continue searching in this direction
+                row_index += dr
+                column_index += dc
+            elif board[row_index][column_index] == piece:
+                # Found a piece of the same type, add all positions in between to reversed_positions
+                intermediate_locations = get_intermediate_locations(position, (row_index, column_index))
+                reversed_positions.extend(intermediate_locations)
+                break
+            else:
+                # Found an empty cell or a piece of the same type, stop searching in this direction
+                break
     return reversed_positions
 def check_valid_cell(board: list[list[str]], player: str, row_index: int, column_index: int) -> bool:
     """
@@ -234,7 +270,7 @@ def get_available_moves(board: list[list[str]], player: str) -> list[str]:
             # print(cell)
             # print(f"{chr(row_index + 65)}{column_index + 1}")
             # print(check_valid_cell(board, player, row_index, column_index))
-            if (cell == "+" and check_valid_cell(board, player, row_index, column_index)):
+            if (cell == "+"):
                 position = (row_index, column_index)
                 reversed_positions = get_reversed_positions(board, player, position)
 
