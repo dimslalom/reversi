@@ -70,8 +70,10 @@ def generate_empty_board(size: int) -> list[list[str]]:
     [['+', '+'], ['+', '+']]
      """
     empty_board = []
+    # Create a list of empty rows
     for x in range(size):
         row = []
+        # Create a row with empty cells
         for y in range(size):
             row.append("+")
         empty_board.append(row)
@@ -81,8 +83,14 @@ def generate_initial_board() -> list[list[str]]:
     """
     Generates a board with the initial game state with 8 rows and 8 columns.
     The center 4 squares are filled with the initial pieces of the game.
+
+    >>> generate_initial_board()
+    [['+', '+', '+', '+', '+', '+', '+', '+'], ['+', '+', '+', '+', '+', '+', '+', '+'], ['+', '+', '+', '+', '+', '+', '+', '+'], ['+', '+', '+', 'O', 'X', '+', '+', '+'], ['+', '+', '+', 'X', 'O', '+', '+', '+'], ['+', '+', '+', '+', '+', '+', '+', '+'], ['+', '+', '+', '+', '+', '+', '+', '+'], ['+', '+', '+', '+', '+', '+', '+']]
+    
     """
+    # Define the size of the board
     initial_board = generate_empty_board(BOARD_SIZE)
+    # Place the initial pieces in the center of the board
     initial_board[3][3] = "O"
     initial_board[3][4] = "X"
     initial_board[4][3] = "X"
@@ -102,16 +110,19 @@ def check_winner(board: list[list[str]]) -> str:
     """
     x_count = 0
     o_count = 0
+    # Count the number of X and O pieces on the board
     for row in range(len(board)):
         for col in range(len(board[row])):
             if board[row][col] == "X":
                 x_count += 1
             elif board[row][col] == "O":
                 o_count += 1
+    # Determine the winner based on the counts
     if x_count > o_count:
         return "X"
     elif o_count > x_count:
         return "O"
+    # If both players have the same number of pieces, there is no winner yet
     else:
         return ""
 # Task 6
@@ -123,17 +134,37 @@ def get_intermediate_locations(position: tuple[int, int], new_position: tuple[in
     Preconditions:
 
     piece == X or piece == O 
+
+    >>> get_intermediate_locations((0, 0), (0, 3))
+    [(0, 1), (0, 2)]
+    >>> get_intermediate_locations((5, 0), (1, 0))
+    [(4, 0), (3, 0), (2, 0)]
+    >>> get_intermediate_locations((1, 1), (4, 4))
+    [(2, 2), (3, 3)]
+    >>> get_intermediate_locations((0, 0), (1, 2))
+    []
+    >>> get_intermediate_locations((2, 2), (2, 2))
+    []
+    >>> get_intermediate_locations((1, 1), (2, 2))
+    []
     """
+    # Check if the two positions are on the same row, column, or diagonal
     row_diff = new_position[0] - position[0]
     col_diff = new_position[1] - position[1]
+    # Determine the direction of movement for each step (1 for positive change, -1 for negative)
     step_row = 1 if row_diff > 0 else -1
     step_col = 1 if col_diff > 0 else -1
+
+    # Check if the movement is diagonal (absolute change in rows equals absolute change in columns)
     if abs(row_diff) == abs(col_diff):
         intermediate_locations = [(position[0] + i * step_row, position[1] + i * step_col) for i in range(1, abs(row_diff))]
+    # Check if the movement is horizontal (absolute change in columns only)
     elif row_diff == 0:
         intermediate_locations = [(position[0], position[1] + i * step_col) for i in range(1, abs(col_diff))]
+    # Check if the movement is vertical (absolute change in rows only)
     elif col_diff == 0:
         intermediate_locations = [(position[0] + i * step_row, position[1]) for i in range(1, abs(row_diff))]
+    # If the movement is neither horizontal, vertical, nor diagonal, return an empty list
     else:
         intermediate_locations = []
 
@@ -142,20 +173,37 @@ def get_intermediate_locations(position: tuple[int, int], new_position: tuple[in
 def display_board(board: list[list[str]]) -> None:
     """
     Displays the board in a readable format.
+    
+    >>> board = [['+', 'X', '+'], ['O', '+', 'X']]
+    >>> display_board(board1)
+      123
+      ---
+    A|+X+|
+    B|O+X|
+      ---
     """
     top_bar = ""
     border = ""
-    alphabet = "ABCDEFGH"
+    alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    # Check if the board is not empty to avoid index errors
+    if not board or not board[0]:
+        print("(Empty Board)")
+        return
+    # Create the top bar and border
     for i in range(len(board[0])):
         top_bar += str(i + 1)
         border += "-" 
     print(f"  {top_bar}\n  {border}")
+    # Create the board display
     for i, row in enumerate(board):
         level = f"{alphabet[i]}|"
+        # Append each piece/cell content from the current row to the row string
         for piece in row:
             level += piece
+        # Add the right border to the row string
         level += "|"
         print(level)
+    # Print the bottom border with indentation
     print(f"  {border}")
 # Task 8
 def get_valid_command(valid_moves: list[str]) -> str:
@@ -288,6 +336,7 @@ def make_move(board: list[list[str]], piece: str, move: str) -> None:
     move is a valid move, given in upper case
     move corresponds to a valid position on the board
     each row of board will contain the same number of columns
+
     """
     row_index, column_index = move_to_index(move)
     board[row_index][column_index] = piece
@@ -298,7 +347,24 @@ def make_move(board: list[list[str]], piece: str, move: str) -> None:
 def play_game() -> None:
     """
     The main function of the game. 
-    It should display the initial board, and then repeatedly ask the user for a move until the game is over.
+    It should display the initial board, and then repeatedly ask the user for a move until the game is over, or the user quits.
+
+    >>> play_game()
+    Welcome to Reversi!
+      12345678
+      --------
+    A|++++++++|
+    B|++++++++|
+    C|++++++++|
+    D|+++OX+++|
+    E|+++XO+++|
+    F|++++++++|
+    G|++++++++|
+    H|++++++++|
+      --------
+    Player 1 to move
+    Possible moves: C5,D6,E3,F4
+    Please enter move (Or H for help): 
     """
     board = generate_initial_board()
     # Count if both players have no moves
@@ -313,39 +379,41 @@ def play_game() -> None:
     valid_moves = get_available_moves(board, player)
     # Game loop
     while True:
-        while valid_moves:
+        valid_moves = get_available_moves(board, player)
+        # If valid moves are available for the current player
+        if valid_moves:
+            while True:
+                display_board(board)
+                print(f"Player {player_num} to move")
+                print("Possible moves: " + ",".join(valid_moves))
+                no_moves_counter = 0
+                move = get_valid_command(valid_moves)
+                if move == "Q":
+                # Check for winner
+                    winner = check_winner(board)
+                    if winner == PLAYER_1:
+                        print("Player 1 Wins!")
+                    elif winner == PLAYER_2:
+                        print("Player 2 Wins!")
+                    else:
+                        print(DRAW_TEXT)
+                    return
+                elif move == "H":
+                    print(HELP_MESSAGE)
+                    continue
+                # If the move is valid, make the move
+                else:
+                    make_move(board, player, move)
+                    break
+        # If no valid moves are available for the current player
+        else:
             display_board(board)
             print(f"Player {player_num} to move")
-            print("Possible moves: " + ",".join(valid_moves))
-            no_moves_counter = 0
-            move = get_valid_command(valid_moves)
-            if move == "Q":
-            # Check for winner
-                winner = check_winner(board)
-                if winner == PLAYER_1:
-                    print("Player 1 Wins!")
-                elif winner == PLAYER_2:
-                    print("Player 2 Wins!")
-                else:
-                    print(DRAW_TEXT)
-                return
-            elif move == "H":
-                print(HELP_MESSAGE)
-                print()
-                continue
-            else:
-                make_move(board, player, move)
-            if player == PLAYER_2:
-                player_num = 1
-            else:
-                player_num = 2
-            player = player_tuple[player_num - 1]
-            valid_moves = get_available_moves(board, player)
-        print(f"Player {player_num} has no possible moves!")
-        no_moves_counter += 1
-        # Check if both players have no moves
-        if no_moves_counter == 2:
-            break
+            print(f"Player {player_num} has no possible move!")    
+            no_moves_counter += 1
+            # Check if both players have no moves
+            if no_moves_counter == 2:
+                break
         if player == PLAYER_2:
             player_num = 1
         else:
@@ -363,9 +431,17 @@ def play_game() -> None:
 
 def main() -> None:
     """
-    The main function (You should write a better docstring!)
+    The main function of the program.
     """
-    play_game()
+    while True:
+        play_game()
+        while True:
+            play_again = input(PLAY_AGAIN_PROMPT).upper()
+            if play_again == "Y" or play_again == "N":
+                break
+        if play_again != "Y":
+            break
+
 
     
 
